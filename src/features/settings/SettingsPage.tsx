@@ -1,36 +1,35 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import {
   User,
   ShieldAlert,
   Sliders,
   RotateCcw,
-  CheckCircle2,
   Lock,
   Server,
-  Store,
 } from 'lucide-react';
 import { adminService } from '../../services/adminService';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { ConfirmationDialog } from '../../components/ui/ConfirmationDialog';
 import { initialPreferences } from '../../data/seedData';
 import { useToast } from '../../components/ui/Toast';
+import { useAuth } from '../auth/authContext';
 
 export const SettingsPage: React.FC = () => {
   const { toast } = useToast();
+  const { admin: adminUser } = useAuth();
   const [activeSection, setActiveSection] = useState<'profile' | 'security' | 'preferences'>('profile');
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+
+  // Compute dynamic initials from logged-in admin name
+  const adminInitials = adminUser?.name
+    ? adminUser.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+    : '??';
 
   // Local preferences state
   const [pageSize, setPageSize] = useState<number>(initialPreferences.tablePageSize);
   const [dateFormat, setDateFormat] = useState<string>(initialPreferences.dateFormat);
   const [soundAlerts, setSoundAlerts] = useState<boolean>(initialPreferences.enableSoundAlerts);
   const [compactDensity, setCompactDensity] = useState<boolean>(initialPreferences.compactTableDensity);
-
-  const { data: adminUser } = useQuery({
-    queryKey: ['adminUser'],
-    queryFn: () => adminService.getAdminUser(),
-  });
 
   const handleSavePreferences = (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,12 +107,12 @@ export const SettingsPage: React.FC = () => {
         <div className="max-w-2xl bg-white rounded-card border border-border-light p-6 shadow-card space-y-6">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-full bg-brand-100 text-brand-800 font-bold text-xl flex items-center justify-center border-2 border-brand-200">
-              SV
+              {adminInitials}
             </div>
             <div>
-              <h3 className="text-lg font-bold text-ink-primary">{adminUser?.name || 'Shriya Verma'}</h3>
-              <p className="text-xs text-brand-700 font-semibold">{adminUser?.role}</p>
-              <p className="text-xs text-ink-muted mt-0.5">{adminUser?.email}</p>
+              <h3 className="text-lg font-bold text-ink-primary">{adminUser?.name ?? '—'}</h3>
+              <p className="text-xs text-brand-700 font-semibold">{adminUser?.roleLabel || (adminUser?.role === 'admin' ? 'Admin' : 'Store Manager')}</p>
+              <p className="text-xs text-ink-muted mt-0.5">{adminUser?.email ?? '—'}</p>
             </div>
           </div>
 
@@ -124,7 +123,9 @@ export const SettingsPage: React.FC = () => {
             </div>
             <div className="py-3 flex justify-between">
               <span className="text-ink-muted">Console Access Level:</span>
-              <span className="font-semibold text-emerald-700">Hub Lead & Store Admin (L3 Ops)</span>
+              <span className="font-semibold text-emerald-700">
+                {adminUser?.role === 'admin' ? 'Admin (Full Platform Access)' : 'Store Manager (Commerce Only)'}
+              </span>
             </div>
             <div className="py-3 flex justify-between">
               <span className="text-ink-muted">Current Session Initialized:</span>

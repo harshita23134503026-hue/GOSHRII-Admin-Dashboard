@@ -20,6 +20,9 @@ import {
   PartnerVerificationStatus,
   VerificationDocument,
   VerificationHistoryEvent,
+  Store,
+  CreateStoreInput,
+  UpdateStoreInput,
 } from '../types';
 import {
   initialCategories,
@@ -30,8 +33,11 @@ import {
   initialOrders,
   initialCustomers,
   initialDeliveryPartners,
+  initialStores,
   initialAlerts,
   initialAdminUser,
+  initialSuperAdmin,
+  initialStoreAdmin,
   initialRideDrivers,
   initialRideBookings,
   initialParcelCouriers,
@@ -49,6 +55,7 @@ interface MockDatabaseState {
   orders: Order[];
   customers: Customer[];
   deliveryPartners: DeliveryPartner[];
+  stores: Store[];
   alerts: OperationalAlert[];
   adminUser: AdminUser;
   // Domain 2: Ride Booking
@@ -68,6 +75,7 @@ const getInitialState = (): MockDatabaseState => ({
   orders: initialOrders,
   customers: initialCustomers,
   deliveryPartners: initialDeliveryPartners,
+  stores: initialStores,
   alerts: initialAlerts,
   adminUser: initialAdminUser,
   rides: initialRideDrivers ? initialRideBookings : [],
@@ -145,6 +153,7 @@ class MockDatabase {
           ...getInitialState(),
           ...parsed,
           deliveryPartners,
+          stores: parsed.stores || initialStores,
           rides: parsed.rides || initialRideBookings,
           drivers: parsed.drivers || initialRideDrivers,
           parcels: parsed.parcels || initialParcelBookings,
@@ -538,6 +547,74 @@ class MockDatabase {
     return this.state.deliveryPartners.find((dp) => dp.id === id);
   }
 
+  // ==========================================
+  // STORES MANAGEMENT
+  // ==========================================
+
+  public getStores(): Store[] {
+    return [...(this.state.stores || [])];
+  }
+
+  public getStoreById(id: string): Store | undefined {
+    return (this.state.stores || []).find((s) => s.id === id);
+  }
+
+  public createStore(input: CreateStoreInput): Store {
+    const nextNum = (this.state.stores?.length || 0) + 1;
+    const id = `str_${String(nextNum).padStart(2, '0')}`;
+    const newStore: Store = {
+      id,
+      storeName: input.storeName.trim(),
+      userName: input.userName.trim(),
+      email: input.email.trim(),
+      password: input.password || 'store@2024',
+      phone: input.phone.trim(),
+      location: input.location.trim(),
+      city: input.city?.trim() || 'Bengaluru',
+      status: input.status || 'ACTIVE',
+      createdAt: new Date().toISOString(),
+      operatingHours: input.operatingHours || '07:00 AM - 11:00 PM',
+      totalOrders: 0,
+      totalRevenue: 0,
+      category: input.category || 'Grocery & Daily Essentials',
+    };
+
+    const nextStores = [newStore, ...(this.state.stores || [])];
+    this.saveState({ ...this.state, stores: nextStores });
+    return newStore;
+  }
+
+  public updateStore(id: string, updates: UpdateStoreInput): Store {
+    const store = this.getStoreById(id);
+    if (!store) throw new Error(`Store ${id} not found.`);
+
+    const updated: Store = {
+      ...store,
+      ...updates,
+      id: store.id,
+      createdAt: store.createdAt,
+    };
+
+    const nextStores = (this.state.stores || []).map((s) => (s.id === id ? updated : s));
+    this.saveState({ ...this.state, stores: nextStores });
+    return updated;
+  }
+
+  public toggleStoreStatus(id: string): Store {
+    const store = this.getStoreById(id);
+    if (!store) throw new Error(`Store ${id} not found.`);
+    const nextStatus = store.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    return this.updateStore(id, { status: nextStatus });
+  }
+
+  public deleteStore(id: string): boolean {
+    const prevLen = (this.state.stores || []).length;
+    const nextStores = (this.state.stores || []).filter((s) => s.id !== id);
+    if (nextStores.length === prevLen) return false;
+    this.saveState({ ...this.state, stores: nextStores });
+    return true;
+  }
+
   public reviewPartnerDocument(params: {
     partnerId: string;
     documentId: string;
@@ -862,6 +939,61 @@ class MockDatabase {
 
   public getAdminUser(): AdminUser {
     return { ...this.state.adminUser };
+  }
+
+  // ==========================================
+  // 5. AUTH — Credential Validation
+  // ==========================================
+
+  /**
+   * Validates admin login credentials against the demo account.
+   * Returns the AdminUser on success, or null on failure.
+   * In production this would be a server-side API call.
+   */
+  public validateAdminCredentials(email: string, password: string): AdminUser | null {
+    const trimmed = email.trim().toLowerCase();
+
+    // 1. Admin — Full Access
+    const isAdmin =
+      (trimmed === 'admin@goshrii.in' || trimmed === 'admin') &&
+      (password === 'admin' || password === 'goshrii@2024');
+
+    if (isAdmin) {
+      return {
+        ...this.state.adminUser,
+        role: 'admin',
+        roleLabel: 'Admin',
+        lastLogin: new Date().toISOString(),
+      };
+    }
+
+    // 2. Store Manager — Commerce Only
+    const matchedStore = (this.state.stores || []).find(
+      (s) =>
+        (trimmed === s.email.toLowerCase() || trimmed === s.userName.toLowerCase()) &&
+        (password === s.password || password === 'store@2024' || password === 'store')
+    );
+
+    const isStoreManager =
+      Boolean(matchedStore) ||
+      ((trimmed === 'store@goshrii.in' || trimmed === 'store') &&
+        (password === 'store@2024' || password === 'store'));
+
+    if (isStoreManager) {
+      return {
+        id: matchedStore ? `admin_${matchedStore.id}` : initialStoreAdmin.id,
+        name: matchedStore ? matchedStore.storeName : initialStoreAdmin.name,
+        email: matchedStore ? matchedStore.email : initialStoreAdmin.email,
+        role: 'store_manager',
+        roleLabel: 'Store Manager',
+        hubLocation: matchedStore
+          ? `${matchedStore.storeName} (${matchedStore.location})`
+          : initialStoreAdmin.hubLocation,
+        lastLogin: new Date().toISOString(),
+      };
+    }
+
+    return null;
   }
 }
 

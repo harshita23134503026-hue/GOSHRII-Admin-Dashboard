@@ -21,6 +21,8 @@ import {
   Compass,
   ChevronDown,
 } from 'lucide-react';
+import { useAuth } from '../../features/auth/authContext';
+import { AdminRole } from '../../types';
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -38,6 +40,8 @@ interface NavSection {
   title: string;
   isCollapsible?: boolean;
   defaultExpanded?: boolean;
+  /** Roles that can see this section. Omit to show to all roles. */
+  allowedRoles?: AdminRole[];
   items: NavItem[];
 }
 
@@ -65,6 +69,7 @@ const navSections: NavSection[] = [
     title: 'RIDE BOOKING',
     isCollapsible: true,
     defaultExpanded: true,
+    allowedRoles: ['admin'],
     items: [
       { name: 'Ride Overview', to: '/rides', icon: Car },
       { name: 'Ride Bookings', to: '/rides/bookings', icon: Navigation },
@@ -75,6 +80,7 @@ const navSections: NavSection[] = [
     title: 'PARCEL DELIVERY',
     isCollapsible: true,
     defaultExpanded: true,
+    allowedRoles: ['admin'],
     items: [
       { name: 'Parcel Overview', to: '/parcels', icon: PackageSearch },
       { name: 'Parcel Bookings', to: '/parcels/bookings', icon: Truck },
@@ -83,9 +89,17 @@ const navSections: NavSection[] = [
   },
   {
     title: 'SHARED MANAGEMENT',
+    allowedRoles: ['admin'],
     items: [
       { name: 'Customers', to: '/customers', icon: Users },
       { name: 'Delivery Partners', to: '/delivery-partners', icon: Bike },
+      { name: 'Stores', to: '/stores', icon: Store },
+    ],
+  },
+  {
+    // Visible to all roles including st_admin
+    title: 'ACCOUNT',
+    items: [
       { name: 'Settings', to: '/settings', icon: Settings },
     ],
   },
@@ -93,6 +107,8 @@ const navSections: NavSection[] = [
 
 export const AppSidebar: React.FC<AppSidebarProps> = ({ isOpen, onClose, isCollapsed = false }) => {
   const location = useLocation();
+  const { admin } = useAuth();
+  const role = admin?.role;
 
   // Keep track of collapsed/expanded state for collapsible sections
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
@@ -103,6 +119,13 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ isOpen, onClose, isColla
       [title]: !prev[title],
     }));
   };
+
+  // Filter sections by role
+  const visibleSections = navSections.filter((section) => {
+    if (!section.allowedRoles) return true; // visible to all
+    if (!role) return false;
+    return section.allowedRoles.includes(role);
+  });
 
   return (
     <>
@@ -133,7 +156,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ isOpen, onClose, isColla
                   GOSHRII
                 </span>
                 <span className="text-[10px] text-brand-700 font-semibold tracking-wider uppercase mt-0.5">
-                  Ops Console
+                  {role === 'store_manager' ? 'Store Console' : 'Ops Console'}
                 </span>
               </div>
             )}
@@ -150,9 +173,17 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ isOpen, onClose, isColla
           </button>
         </div>
 
+        {/* Store Manager role badge */}
+        {!isCollapsed && role === 'store_manager' && (
+          <div className="mx-3 mt-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+            <span className="text-[11px] font-semibold text-amber-800">Store Manager Access</span>
+          </div>
+        )}
+
         {/* Navigation Items */}
         <div className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
-          {navSections.map((section) => {
+          {visibleSections.map((section) => {
             const isSectionCollapsed = Boolean(collapsedSections[section.title]);
             const hasActiveRoute = section.items.some((item) => location.pathname === item.to);
 
@@ -218,7 +249,9 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ isOpen, onClose, isColla
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Koramangala Hub — Active</span>
               </div>
-              <p className="text-ink-secondary truncate">GOSHRII Multi-Service Core</p>
+              <p className="text-ink-secondary truncate">
+                {role === 'store_manager' ? 'GOSHRII Commerce Store' : 'GOSHRII Multi-Service Core'}
+              </p>
             </div>
           </div>
         )}

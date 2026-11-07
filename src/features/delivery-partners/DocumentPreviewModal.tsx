@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { VerificationDocument } from '../../types';
 import { VerificationStatusBadge } from './VerificationStatusBadge';
 import { formatDate } from '../../utils/formatters';
@@ -78,9 +79,10 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
     setRotation(0);
   };
 
-  return (
+  const modal = (
     <div
-      className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-2 sm:p-4 bg-ink-primary/75 backdrop-blur-xs animate-in fade-in duration-150"
+      className="fixed inset-0 z-60 overflow-hidden flex items-center justify-center p-2 sm:p-4 bg-ink-primary/75 backdrop-blur-xs animate-in fade-in duration-150"
+      style={{ zIndex: 9999 }}
       role="dialog"
       aria-modal="true"
     >
@@ -292,4 +294,6 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(modal, window.document.body);
 };

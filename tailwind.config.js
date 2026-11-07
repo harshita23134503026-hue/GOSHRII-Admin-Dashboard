@@ -51,6 +51,10 @@ export default {
         'card': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03)',
         'dropdown': '0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04)',
         'drawer': '-4px 0 16px rgba(0, 0, 0, 0.08)',
+      },
+      zIndex: {
+        '60': '60', // DocumentPreviewModal & DocumentReviewDialog (above z-50 drawer)
+        '70': '70', // Reserved for future top-priority overlays
       }
     },
   },

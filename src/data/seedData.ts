@@ -13,6 +13,7 @@ import {
   RideBooking,
   ParcelCourier,
   ParcelBooking,
+  Store,
 } from '../types';
 
 // ==========================================
@@ -1673,13 +1674,97 @@ export const initialAlerts: OperationalAlert[] = [
   },
 ];
 
+// ==========================================
+// STORE MANAGEMENT SEED DATA
+// ==========================================
+
+export const initialStores: Store[] = [
+  {
+    id: 'str_01',
+    storeName: 'Koramangala Commerce Hub',
+    userName: 'store',
+    email: 'store@goshrii.in',
+    password: 'store@2024',
+    phone: '+91 98450 22341',
+    location: '80 Feet Rd, 4th Block, Koramangala',
+    city: 'Bengaluru',
+    status: 'ACTIVE',
+    createdAt: '2026-08-15T10:00:00Z',
+    operatingHours: '06:00 AM - 11:30 PM',
+    totalOrders: 1420,
+    totalRevenue: 486500,
+    category: 'Grocery & Fresh Essentials',
+  },
+  {
+    id: 'str_02',
+    storeName: 'Indiranagar Quick Mart',
+    userName: 'indiranagar_store',
+    email: 'indiranagar@goshrii.in',
+    password: 'in@goshrii2026',
+    phone: '+91 97312 88491',
+    location: '100 Feet Rd, HAL 2nd Stage, Indiranagar',
+    city: 'Bengaluru',
+    status: 'ACTIVE',
+    createdAt: '2026-09-01T11:30:00Z',
+    operatingHours: '07:00 AM - 11:00 PM',
+    totalOrders: 980,
+    totalRevenue: 341200,
+    category: 'Daily Needs & Beverages',
+  },
+  {
+    id: 'str_03',
+    storeName: 'HSR Organic Grocers',
+    userName: 'hsr_organics',
+    email: 'hsr.store@goshrii.in',
+    password: 'hsr@2026pass',
+    phone: '+91 99001 54321',
+    location: 'Sector 3, 27th Main Rd, HSR Layout',
+    city: 'Bengaluru',
+    status: 'ACTIVE',
+    createdAt: '2026-09-20T09:15:00Z',
+    operatingHours: '06:30 AM - 10:30 PM',
+    totalOrders: 750,
+    totalRevenue: 289400,
+    category: 'Organic Farm & Staples',
+  },
+  {
+    id: 'str_04',
+    storeName: 'Whitefield Mega Depot',
+    userName: 'whitefield_depot',
+    email: 'whitefield@goshrii.in',
+    password: 'wf@pass2026',
+    phone: '+91 96112 34567',
+    location: 'ITPL Main Rd, Kundalahalli, Whitefield',
+    city: 'Bengaluru',
+    status: 'INACTIVE',
+    createdAt: '2026-10-05T14:00:00Z',
+    operatingHours: '08:00 AM - 10:00 PM',
+    totalOrders: 210,
+    totalRevenue: 82000,
+    category: 'Hypermarket & FMCG',
+  },
+];
+
 export const initialAdminUser: AdminUser = {
   id: 'admin_demo_01',
-  name: 'Shriya Verma',
-  email: 'shriya.verma@goshrii.internal',
-  role: 'Operations Lead & Store Manager',
+  name: 'Admin',
+  email: 'admin@goshrii.in',
+  role: 'admin',
+  roleLabel: 'Admin',
   hubLocation: 'Multi-Service Core — Koramangala Hub (Bengaluru)',
-  lastLogin: '2026-10-14T11:15:00+05:30',
+  lastLogin: '2026-10-31T10:00:00+05:30',
+};
+
+export const initialSuperAdmin: AdminUser = initialAdminUser;
+
+export const initialStoreAdmin: AdminUser = {
+  id: 'admin_store_01',
+  name: 'Store Manager',
+  email: 'store@goshrii.in',
+  role: 'store_manager',
+  roleLabel: 'Store Manager',
+  hubLocation: 'Commerce Store — Koramangala Hub (Bengaluru)',
+  lastLogin: '2026-10-31T09:00:00+05:30',
 };
 
 export const initialPreferences = {

@@ -263,6 +263,33 @@ export interface DeliveryPartner {
 }
 
 // ==========================================
+// STORE MANAGEMENT DOMAIN TYPES
+// ==========================================
+
+export interface Store {
+  id: string;
+  storeName: string;
+  userName: string;
+  email: string;
+  password?: string;
+  phone: string;
+  location: string;
+  city: string;
+  status: 'ACTIVE' | 'INACTIVE';
+  createdAt: string;
+  operatingHours?: string;
+  totalOrders?: number;
+  totalRevenue?: number;
+  category?: string;
+}
+
+export type CreateStoreInput = Omit<Store, 'id' | 'createdAt'> & {
+  confirmPassword?: string;
+};
+
+export type UpdateStoreInput = Partial<CreateStoreInput>;
+
+// ==========================================
 // 2. RIDE BOOKING DOMAIN TYPES
 // ==========================================
 
@@ -447,11 +474,14 @@ export interface OperationalAlert {
   isRead: boolean;
 }
 
+export type AdminRole = 'admin' | 'store_manager';
+
 export interface AdminUser {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: AdminRole;
+  roleLabel: string;
   hubLocation: string;
   lastLogin: string;
 }

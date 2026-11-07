@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { VerificationDocument } from '../../types';
 import {
   CheckCircle2,
@@ -77,9 +78,10 @@ export const DocumentReviewDialog: React.FC<DocumentReviewDialogProps> = ({
     }
   };
 
-  return (
+  const dialog = (
     <div
       className="fixed inset-0 z-60 overflow-y-auto flex items-center justify-center p-4 bg-ink-primary/60 backdrop-blur-xs animate-in fade-in duration-150"
+      style={{ zIndex: 9999 }}
       role="dialog"
       aria-modal="true"
     >
@@ -249,4 +251,6 @@ export const DocumentReviewDialog: React.FC<DocumentReviewDialogProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(dialog, window.document.body);
 };

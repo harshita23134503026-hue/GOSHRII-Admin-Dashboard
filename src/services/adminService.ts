@@ -15,6 +15,9 @@ import {
   RideDriver,
   ParcelBooking,
   ParcelCourier,
+  Store,
+  CreateStoreInput,
+  UpdateStoreInput,
 } from '../types';
 
 // Simulate realistic network delay for async loading states
@@ -164,6 +167,37 @@ export const adminService = {
   }): Promise<DeliveryPartner> {
     await delay(200);
     return mockDb.reviewPartnerDocument(params);
+  },
+
+  // STORES
+  async getStores(): Promise<Store[]> {
+    await delay(120);
+    return mockDb.getStores();
+  },
+
+  async getStoreById(id: string): Promise<Store | undefined> {
+    await delay(80);
+    return mockDb.getStoreById(id);
+  },
+
+  async createStore(data: CreateStoreInput): Promise<Store> {
+    await delay(200);
+    return mockDb.createStore(data);
+  },
+
+  async updateStore(id: string, updates: UpdateStoreInput): Promise<Store> {
+    await delay(180);
+    return mockDb.updateStore(id, updates);
+  },
+
+  async toggleStoreStatus(id: string): Promise<Store> {
+    await delay(150);
+    return mockDb.toggleStoreStatus(id);
+  },
+
+  async deleteStore(id: string): Promise<boolean> {
+    await delay(150);
+    return mockDb.deleteStore(id);
   },
 
   // RIDE BOOKINGS

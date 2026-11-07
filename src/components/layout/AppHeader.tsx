@@ -2,18 +2,16 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Menu,
   Bell,
-  RotateCcw,
   User,
-  ShieldCheck,
   Search,
   ExternalLink,
+  LogOut,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { adminService } from '../../services/adminService';
 import { NotificationItem } from '../ui/NotificationItem';
-import { ConfirmationDialog } from '../ui/ConfirmationDialog';
-import { useToast } from '../ui/Toast';
+import { useAuth } from '../../features/auth/authContext';
 
 interface AppHeaderProps {
   onToggleSidebar: () => void;
@@ -22,10 +20,9 @@ interface AppHeaderProps {
 
 export const AppHeader: React.FC<AppHeaderProps> = ({ onToggleSidebar, pageTitle }) => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { logout, admin: adminUser } = useAuth();
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const [globalSearch, setGlobalSearch] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
@@ -36,11 +33,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onToggleSidebar, pageTitle
   const { data: alerts = [], refetch: refetchAlerts } = useQuery({
     queryKey: ['alerts'],
     queryFn: () => adminService.getAlerts(),
-  });
-
-  const { data: adminUser } = useQuery({
-    queryKey: ['adminUser'],
-    queryFn: () => adminService.getAdminUser(),
   });
 
   const { data: products = [] } = useQuery({
@@ -79,20 +71,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onToggleSidebar, pageTitle
   const handleDismissAlert = async (id: string) => {
     await adminService.markAlertAsRead(id);
     refetchAlerts();
-  };
-
-  const handleResetDemoData = () => {
-    adminService.resetDemoData();
-    setIsResetDialogOpen(false);
-    toast({
-      type: 'success',
-      title: 'Demo Data Reset Successfully',
-      description: 'Restored original seed inventory, products, orders and metrics.',
-    });
-    // Reload window so all TanStack Query caches cleanly rehydrate
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
   };
 
   return (
@@ -166,26 +144,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onToggleSidebar, pageTitle
 
         {/* Right: Actions, Demo Pill, Notifications, Profile */}
         <div className="flex items-center gap-2.5 sm:gap-3.5">
-          {/* Demo Mode Badge */}
-          <div
-            className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-50 border border-brand-100 text-brand-800 text-[11px] font-medium"
-            title="Prototype with local mock database"
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-brand-600" />
-            <span>Demo Mode</span>
-          </div>
-
-          {/* Reset Demo Data Button */}
-          <button
-            type="button"
-            onClick={() => setIsResetDialogOpen(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-slate-700 bg-surface-secondary hover:bg-slate-200 border border-border-light rounded-lg transition-colors"
-            title="Reset mock database to initial seed records"
-          >
-            <RotateCcw className="w-3.5 h-3.5 text-ink-secondary" />
-            <span className="hidden md:inline">Reset Data</span>
-          </button>
-
           {/* Operational Alerts Bell */}
           <div className="relative" ref={alertsRef}>
             <button
@@ -247,13 +205,15 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onToggleSidebar, pageTitle
                       .split(' ')
                       .map((n) => n[0])
                       .join('')
-                  : 'SV'}
+                      .toUpperCase()
+                      .slice(0, 2)
+                  : '?'}
               </div>
               <div className="hidden xl:block text-left">
                 <p className="text-xs font-semibold text-ink-primary leading-tight">
-                  {adminUser?.name || 'Shriya Verma'}
+                  {adminUser?.name ?? '—'}
                 </p>
-                <p className="text-[11px] text-ink-muted leading-tight">Dark Store Ops Lead</p>
+                <p className="text-[11px] text-ink-muted leading-tight">{adminUser?.roleLabel ?? ''}</p>
               </div>
             </button>
 
@@ -278,23 +238,28 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onToggleSidebar, pageTitle
                   <User className="w-3.5 h-3.5 text-ink-secondary" />
                   Account & Store Settings
                 </button>
+
+                <div className="border-t border-border-light mt-1 pt-1">
+                  <button
+                    id="header-logout-button"
+                    type="button"
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      logout();
+                      navigate('/login', { replace: true });
+                    }}
+                    className="w-full text-left px-2.5 py-1.5 rounded-md hover:bg-red-50 text-xs text-red-600 flex items-center gap-2 font-medium transition-colors"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    Sign Out
+                  </button>
+                </div>
               </div>
             )}
           </div>
         </div>
       </header>
 
-      {/* Confirmation Dialog for Reset Demo Data */}
-      <ConfirmationDialog
-        isOpen={isResetDialogOpen}
-        onClose={() => setIsResetDialogOpen(false)}
-        onConfirm={handleResetDemoData}
-        title="Reset Demo Data to Initial Seed?"
-        description="This will clear all changes stored in local storage and restore original Indian grocery products, stock quantities, orders, and pricing. This cannot be undone."
-        confirmLabel="Reset Data"
-        cancelLabel="Keep Current State"
-        variant="warning"
-      />
     </>
   );
 };
