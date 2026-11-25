@@ -154,7 +154,7 @@ export const DocumentReviewDialog: React.FC<DocumentReviewDialogProps> = ({
               <p className="text-[11px] text-emerald-800 leading-relaxed">
                 By approving this document, you confirm that the scan has been visually inspected,
                 the masked identifiers match company records, and the document is valid under
-                GOSHRII compliance standards.
+                GoSri compliance standards.
               </p>
             </div>
           ) : (

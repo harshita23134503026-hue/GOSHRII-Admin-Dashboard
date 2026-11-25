@@ -1,8 +1,8 @@
-# GOSHRII Admin Console — Backend Integration Guide
+# GoSri Admin Console — Backend Integration Guide
 
 ## 1. Executive Summary & Objective
 
-**GOSHRII** is an administrative operations console managing three major business domains:
+**GoSri** is an administrative operations console managing three major business domains:
 1. Quick-Commerce / Dark Store Grocery Operations
 2. Ride Booking & Fleet Dispatch Administration
 3. Local Point-to-Point Parcel Delivery Administration
@@ -20,7 +20,7 @@ A centralized Axios instance is already preconfigured in [`src/services/apiClien
 ### Environment Configuration
 - Create a `.env.production` file:
   ```env
-  VITE_API_BASE_URL=https://api.goshrii.internal/v1
+  VITE_API_BASE_URL=https://api.gosri.internal/v1
   ```
 - The Axios instance automatically reads `import.meta.env.VITE_API_BASE_URL`.
 
@@ -28,7 +28,7 @@ A centralized Axios instance is already preconfigured in [`src/services/apiClien
 When live JWT authentication is activated:
 ```ts
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('goshrii_access_token');
+  const token = localStorage.getItem('gosri_access_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

@@ -232,7 +232,7 @@ export const StoreFormDrawer: React.FC<StoreFormDrawerProps> = ({
             <Mail className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="email"
-              placeholder="e.g. store@goshrii.in"
+              placeholder="e.g. store@gosri.in"
               {...register('email')}
               className={`w-full pl-9 pr-3.5 py-2 text-xs bg-surface-secondary border rounded-lg text-ink-primary placeholder:text-ink-muted focus:ring-2 focus:bg-white outline-none transition-all ${
                 errors.email

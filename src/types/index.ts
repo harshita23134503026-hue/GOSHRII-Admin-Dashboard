@@ -1,5 +1,5 @@
 /**
- * Core Type Definitions for GOSHRII Admin Console
+ * Core Type Definitions for GoSri Admin Console
  * Domains: Quick-Commerce (Grocery), Ride Booking, and Local Point-to-Point Parcel Delivery
  */
 

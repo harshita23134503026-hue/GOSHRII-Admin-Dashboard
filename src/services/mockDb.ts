@@ -44,7 +44,8 @@ import {
   initialParcelBookings,
 } from '../data/seedData';
 
-const STORAGE_KEY = 'goshrii_mock_db_v2';
+const STORAGE_KEY = 'gosri_mock_db_v2';
+const LEGACY_STORAGE_KEY = 'goshrii_mock_db_v2';
 
 interface MockDatabaseState {
   products: Product[];
@@ -121,7 +122,7 @@ class MockDatabase {
   private loadState(): MockDatabaseState {
     if (typeof window === 'undefined') return getInitialState();
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         let deliveryPartners = parsed.deliveryPartners;
@@ -745,7 +746,7 @@ class MockDatabase {
         {
           status: 'DRIVER_ASSIGNED',
           timestamp: now,
-          note: `Assigned to driver ${driver.name} (${driver.vehicleModel}) by GOSHRII Ops.`,
+          note: `Assigned to driver ${driver.name} (${driver.vehicleModel}) by GoSri Ops.`,
         },
       ],
     };
@@ -866,7 +867,7 @@ class MockDatabase {
           status: 'CREATED',
           timestamp: now,
           location: data.sender.locality,
-          note: 'Local point-to-point booking created in GOSHRII Ops Console.',
+          note: 'Local point-to-point booking created in GoSri Ops Console.',
         },
       ],
     };
@@ -955,8 +956,8 @@ class MockDatabase {
 
     // 1. Admin — Full Access
     const isAdmin =
-      (trimmed === 'admin@goshrii.in' || trimmed === 'admin') &&
-      (password === 'admin' || password === 'goshrii@2024');
+      (trimmed === 'admin@gosri.in' || trimmed === 'admin@goshrii.in' || trimmed === 'admin') &&
+      (password === 'admin' || password === 'gosri@2024' || password === 'goshrii@2024');
 
     if (isAdmin) {
       return {
@@ -976,7 +977,7 @@ class MockDatabase {
 
     const isStoreManager =
       Boolean(matchedStore) ||
-      ((trimmed === 'store@goshrii.in' || trimmed === 'store') &&
+      ((trimmed === 'store@gosri.in' || trimmed === 'store@goshrii.in' || trimmed === 'store') &&
         (password === 'store@2024' || password === 'store'));
 
     if (isStoreManager) {

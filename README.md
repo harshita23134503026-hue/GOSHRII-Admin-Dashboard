@@ -1,6 +1,6 @@
-# GOSHRII — Multi-Service Operations Admin Platform
+# GoSri — Multi-Service Operations Admin Platform
 
-**GOSHRII** is a modern, high-density, production-style SaaS operations console for a multi-service consumer platform operating across Indian urban hubs. Built with React, TypeScript, Vite, Tailwind CSS, TanStack Query, and Recharts, GOSHRII provides unified administration across three core business domains:
+**GoSri** is a modern, high-density, production-style SaaS operations console for a multi-service consumer platform operating across Indian urban hubs. Built with React, TypeScript, Vite, Tailwind CSS, TanStack Query, and Recharts, GoSri provides unified administration across three core business domains:
 
 1. **Quick-Commerce / Grocery Dark Store Operations**
 2. **Ride Booking & Fleet Dispatch Administration**

@@ -16,7 +16,8 @@ interface AuthContextValue extends AuthState {
   logout: () => void;
 }
 
-const AUTH_STORAGE_KEY = 'goshrii_auth_session';
+const AUTH_STORAGE_KEY = 'gosri_auth_session';
+const LEGACY_AUTH_STORAGE_KEY = 'goshrii_auth_session';
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
@@ -28,7 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [authState, setAuthState] = useState<AuthState>(() => {
     // Rehydrate from localStorage on mount
     try {
-      const saved = localStorage.getItem(AUTH_STORAGE_KEY);
+      const saved = localStorage.getItem(AUTH_STORAGE_KEY) || localStorage.getItem(LEGACY_AUTH_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.isAuthenticated && parsed.admin) {

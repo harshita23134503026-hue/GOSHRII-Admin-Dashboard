@@ -153,7 +153,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ isOpen, onClose, isColla
             {!isCollapsed && (
               <div className="flex flex-col">
                 <span className="text-lg font-bold text-ink-primary tracking-tight leading-none">
-                  GOSHRII
+                  GoSri
                 </span>
                 <span className="text-[10px] text-brand-700 font-semibold tracking-wider uppercase mt-0.5">
                   {role === 'store_manager' ? 'Store Console' : 'Ops Console'}
@@ -250,7 +250,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ isOpen, onClose, isColla
                 <span>Koramangala Hub — Active</span>
               </div>
               <p className="text-ink-secondary truncate">
-                {role === 'store_manager' ? 'GOSHRII Commerce Store' : 'GOSHRII Multi-Service Core'}
+                {role === 'store_manager' ? 'GoSri Commerce Store' : 'GoSri Multi-Service Core'}
               </p>
             </div>
           </div>

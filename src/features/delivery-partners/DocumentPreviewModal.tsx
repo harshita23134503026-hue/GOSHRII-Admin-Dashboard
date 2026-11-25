@@ -232,7 +232,7 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
         <div className="flex-1 bg-slate-900/90 relative overflow-auto p-6 flex items-center justify-center select-none">
           {/* Security Watermark Backdrop */}
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-5 select-none text-white text-5xl font-black rotate-[-25deg] tracking-widest text-center">
-            GOSHRII CONFIDENTIAL KYC
+            GoSri CONFIDENTIAL KYC
           </div>
 
           <div
@@ -259,7 +259,7 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
                 <FileText className="w-12 h-12 text-slate-400 mx-auto" />
                 <h4 className="font-semibold text-ink-primary text-sm">Document Scan Available</h4>
                 <p className="text-xs text-ink-secondary">
-                  The binary file for {document.name} ({activeSide.toLowerCase()}) is registered in the GOSHRII secure KYC store.
+                  The binary file for {document.name} ({activeSide.toLowerCase()}) is registered in the GoSri secure KYC store.
                 </p>
               </div>
             )}

@@ -26,7 +26,7 @@ export const AppLayout: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
 
-  const currentTitle = routeTitleMap[location.pathname] || 'GOSHRII Operations Platform';
+  const currentTitle = routeTitleMap[location.pathname] || 'GoSri Operations Platform';
 
   return (
     <div className="min-h-screen bg-surface-secondary flex text-ink-primary font-sans antialiased overflow-x-hidden">

@@ -70,7 +70,7 @@ export const PartnerProfileHeader: React.FC<PartnerProfileHeaderProps> = ({ part
               <span className="text-slate-300">•</span>
               <span className="flex items-center gap-1">
                 <Mail className="w-3.5 h-3.5 text-slate-400" />
-                {maskEmail(partner.email || `${partner.id}@goshrii-fleet.in`)}
+                {maskEmail(partner.email || `${partner.id}@gosri-fleet.in`)}
               </span>
             </div>
           </div>

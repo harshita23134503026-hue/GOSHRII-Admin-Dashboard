@@ -152,7 +152,7 @@ export const LoginPage: React.FC = () => {
               <Store className="w-6 h-6 text-white stroke-[2]" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-white tracking-tight leading-none">GOSHRII</p>
+              <p className="text-2xl font-bold text-white tracking-tight leading-none">GoSri</p>
               <p className="text-[11px] text-green-200 font-semibold tracking-[0.2em] uppercase mt-0.5">
                 Ops Console
               </p>
@@ -209,7 +209,7 @@ export const LoginPage: React.FC = () => {
             <Store className="w-5 h-5 text-white" />
           </div>
           <div>
-            <p className="text-lg font-bold text-ink-primary tracking-tight leading-none">GOSHRII</p>
+            <p className="text-lg font-bold text-ink-primary tracking-tight leading-none">GoSri</p>
             <p className="text-[10px] text-brand-700 font-semibold tracking-wider uppercase">Ops Console</p>
           </div>
         </div>
@@ -221,7 +221,7 @@ export const LoginPage: React.FC = () => {
               Welcome back
             </h2>
             <p className="text-sm text-ink-secondary mt-1.5">
-              Sign in to access the GOSHRII Ops Console
+              Sign in to access the GoSri Ops Console
             </p>
           </div>
 
@@ -243,7 +243,7 @@ export const LoginPage: React.FC = () => {
 
           {/* Form */}
           <form
-            id="goshrii-login-form"
+            id="gosri-login-form"
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-4"
             noValidate
@@ -257,7 +257,7 @@ export const LoginPage: React.FC = () => {
                 id="login-email"
                 type="text"
                 autoComplete="username"
-                placeholder="admin@goshrii.in or admin"
+                placeholder="admin@gosri.in or admin"
                 {...register('email')}
                 className={`w-full px-3.5 py-2.5 text-sm bg-surface-secondary border rounded-xl text-ink-primary placeholder:text-ink-muted transition-all duration-150 outline-none focus:ring-2 focus:bg-white ${
                   errors.email
@@ -362,7 +362,7 @@ export const LoginPage: React.FC = () => {
                 <span className="font-semibold text-ink-primary">Admin</span>
                 <span className="px-1.5 py-0.5 rounded text-[10px] bg-brand-50 text-brand-700 font-semibold border border-brand-200/60">Full Access</span>
               </div>
-              <p className="text-ink-muted mt-0.5 font-mono">admin@goshrii.in or admin / admin</p>
+              <p className="text-ink-muted mt-0.5 font-mono">admin@gosri.in or admin / admin</p>
             </div>
 
             {/* Store Manager */}
@@ -371,12 +371,12 @@ export const LoginPage: React.FC = () => {
                 <span className="font-semibold text-amber-900">Store Manager</span>
                 <span className="px-1.5 py-0.5 rounded text-[10px] bg-amber-100 text-amber-800 font-semibold border border-amber-300">Commerce Only</span>
               </div>
-              <p className="text-amber-700 mt-0.5 font-mono">store@goshrii.in / store@2024</p>
+              <p className="text-amber-700 mt-0.5 font-mono">store@gosri.in / store@2024</p>
             </div>
           </div>
 
           <p className="text-center text-[11px] text-ink-muted mt-4">
-            GOSHRII Multi-Service Admin Platform · v2.0
+            GoSri Multi-Service Admin Platform · v2.0
           </p>
         </div>
       </div>
